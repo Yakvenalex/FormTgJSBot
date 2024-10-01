@@ -8,4 +8,4 @@ build:
 run:
   persistenceMount: /data
   containerPort: 8000
-  command: uvicorn main:app
+  command: uvicorn main:app --host 0.0.0.0 --port 8000
