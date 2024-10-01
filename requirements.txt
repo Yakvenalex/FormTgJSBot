@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+python-decouple==3.8
+httpx
+jinja2

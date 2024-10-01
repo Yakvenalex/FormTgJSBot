@@ -31,37 +31,7 @@ hobbiesCheckboxes.forEach(checkbox => {
 const form = document.getElementById('personalForm');
 const modal = document.getElementById('modal');
 
-function sendDataToTelegram(formData) {
-    const botToken = '7845688347:AAFsSq0EAlU42lEnXFue7R8RtVtT337N9BQ';
-    const chatId = '5127841744';
-    const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-    const message = `
-📩 Вам новая заявка:
-<b>Имя:</b> ${formData.firstName}
-<b>Фамилия:</b> ${formData.lastName}
-<b>Дата рождения:</b> ${formData.birthDate}
-<b>Пол:</b> ${formData.gender === 'male' ? 'Мужской' : 'Женский'}
-<b>Хобби:</b> ${formData.hobbies.join(', ')}
-<b>Примечание:</b> ${formData.notes || 'Не указано'}
-            `;
-
-    const params = {
-        chat_id: chatId,
-        text: message,
-        parse_mode: 'HTML'
-    };
-
-    return fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params)
-    }).then(response => response.json());
-}
-
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (validateForm()) {
         const formData = {
@@ -75,29 +45,38 @@ form.addEventListener('submit', (e) => {
             notes: document.getElementById('notes').value
         };
 
-        // Show loading state
+        // Показать состояние загрузки
         modal.innerHTML = '<div class="modal-content"><p>Отправка данных...</p></div>';
         modal.style.display = 'block';
 
-        sendDataToTelegram(formData)
-            .then(result => {
-                if (result.ok) {
-                    modal.innerHTML = '<div class="modal-content"><p>Ваша анкета успешно отправлена</p></div>';
-                } else {
-                    modal.innerHTML = '<div class="modal-content"><p>Ошибка при отправке анкеты. Пожалуйста, попробуйте еще раз.</p></div>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                modal.innerHTML = '<div class="modal-content"><p>Произошла ошибка. Пожалуйста, попробуйте позже.</p></div>';
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    form.reset();
-                    updateHobbiesButton();
-                }, 3000);
+        // Отправка данных на сервер FastAPI
+        try {
+            const response = await fetch('/send-data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
             });
+
+            const result = await response.json();
+            if (result.ok) {
+                modal.innerHTML = '<div class="modal-content"><p>Ваша анкета успешно отправлена</p></div>';
+            } else {
+                // Display the specific error message returned from the server
+                const errorMessage = result.error || 'Ошибка при отправке анкеты. Пожалуйста, попробуйте еще раз.';
+                modal.innerHTML = `<div class="modal-content"><p>${errorMessage}</p></div>`;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            modal.innerHTML = '<div class="modal-content"><p>Произошла ошибка. Пожалуйста, попробуйте позже.</p></div>';
+        } finally {
+            setTimeout(() => {
+                modal.style.display = 'none';
+                form.reset();
+                updateHobbiesButton();
+            }, 3000);
+        }
     }
 });
 
