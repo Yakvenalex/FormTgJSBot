@@ -1,0 +1,89 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личная анкета</title>
+
+    <!-- Импорт стилей -->
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Личная анкета</h1>
+    <form id="personalForm">
+        <div class="form-group">
+            <label for="firstName" class="required">Имя:</label>
+            <input type="text" id="firstName" name="firstName" required>
+            <div class="error" id="firstNameError"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName" class="required">Фамилия:</label>
+            <input type="text" id="lastName" name="lastName" required>
+            <div class="error" id="lastNameError"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="birthDate" class="required">Дата рождения:</label>
+            <input type="date" id="birthDate" name="birthDate" required>
+            <div class="error" id="birthDateError"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="required">Пол:</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="gender" value="male" required> Мужской
+                </label>
+                <label>
+                    <input type="radio" name="gender" value="female" required> Женский
+                </label>
+            </div>
+            <div class="error" id="genderError"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="hobbies" class="required">Хобби:</label>
+            <div class="multiselect">
+                <button type="button" class="multiselect-btn" id="hobbiesBtn">Выберите хобби</button>
+                <div class="multiselect-dropdown" id="hobbiesDropdown">
+                    <div class="multiselect-option">
+                        <input type="checkbox" id="hobby-reading" value="reading">
+                        <label for="hobby-reading">Чтение</label>
+                    </div>
+                    <div class="multiselect-option">
+                        <input type="checkbox" id="hobby-sports" value="sports">
+                        <label for="hobby-sports">Спорт</label>
+                    </div>
+                    <div class="multiselect-option">
+                        <input type="checkbox" id="hobby-music" value="music">
+                        <label for="hobby-music">Музыка</label>
+                    </div>
+                    <div class="multiselect-option">
+                        <input type="checkbox" id="hobby-travel" value="travel">
+                        <label for="hobby-travel">Путешествия</label>
+                    </div>
+                </div>
+            </div>
+            <div class="error" id="hobbiesError"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примечание:</label>
+            <textarea id="notes" name="notes"></textarea>
+        </div>
+
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <p>Ваша анкета отправлена</p>
+    </div>
+</div>
+
+<!-- Импорт JavaScript -->
+<script src="static/script.js"></script>
+</body>
+</html>
